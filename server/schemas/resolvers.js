@@ -45,6 +45,36 @@ const resolvers = {
 
       const token = signToken(user);
       return { token, user };
+    },
+
+    // add a book to user's savedBooks array
+    saveBook: async (parent, { bookId }, context) => {
+      if (context.user) {
+        const updatedUser = await User.findByIdAndUpdate(
+          { _id: context.user._id },
+          { $addToSet: { savedBooks: bookId } },
+          { new: true }
+        ).populate('savedBooks');
+
+        return updatedUser;
+      }
+      
+      throw new AuthenticationError('You must be logged in to save books');
+    },
+
+    // remove book from user's savedBooks array
+    removeBook: async (parent, { bookId }, context) => {
+      if (context.user) {
+        const updatedUser = await User.findByIdAndUpdate(
+          { _id: context.user._id },
+          { $pull: { savedBooks: bookId } },
+          { new: true }
+        ).populate('savedBooks')
+
+        return updatedUser;
+      }
+
+      throw new AuthenticationError('You must be logged in to remove books');
     }
   }
 }
