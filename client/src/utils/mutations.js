@@ -27,12 +27,9 @@ export const ADD_USER = gql`
 export const SAVE_BOOK = gql`
   mutation saveBook($bookId: Int!) {
     saveBook(bookId: $bookId) {
-      bookId
-      title
-      authors
-      description
-      image
-      link
+      _id
+      username
+      savedBooks
     }
   }
 `;
